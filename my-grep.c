@@ -3,13 +3,11 @@
 #include <string.h>
 
 
-void readFile(FILE *file, char ***lines, size_t *linesCount)    {
+void readFile(FILE *file, char *searchTerm)    {
     char *line = NULL;
     size_t len = 0;
-    *lines = NULL;
-    *linesCount = 0;
     char *result = NULL;
-    char *searchTerm = "will";
+    // char *searchTerm = "foo";
 
     // loop for read lines from input file
     while (getline(&line, &len, file) != -1) {
@@ -27,21 +25,6 @@ void readFile(FILE *file, char ***lines, size_t *linesCount)    {
                 line[lineLen + 1] = '\0';
                 lineLen++;
             }
-            // enlarge array
-            char **tmp = realloc(*lines,(*linesCount +1) * sizeof(char *));
-            if(tmp == NULL) {
-                fprintf(stderr, "realloc failed\n");
-                exit(1);
-            }
-            *lines = tmp;
-
-            (*lines)[*linesCount] = malloc(lineLen + 1); // memory allocation for new line
-            if((*lines)[*linesCount] == NULL)    {
-                fprintf(stderr, "malloc failed\n");
-                exit(1);
-            }
-            strcpy((*lines)[*linesCount], line); // copy line to array
-            (*linesCount)++; // count lines
             fprintf(stdout, "%s", line);
         }
     }
@@ -52,15 +35,15 @@ void readFile(FILE *file, char ***lines, size_t *linesCount)    {
 
 int main(int argc, char* argv[]) {
     FILE *fp;
-    char **lines = NULL;
-    size_t linesCount = 0;
+    // char **lines = NULL;
+    // size_t linesCount = 0;
 
     if (argc == 1)    {
         fprintf(stderr, "my-grep: searchterm [file ...]\n");
         exit(1);
     };
     if (argc == 2) {
-        readFile(stdin, &lines, &linesCount);
+        readFile(stdin, argv[1]);
         exit(0);
     };
 
@@ -72,7 +55,7 @@ int main(int argc, char* argv[]) {
             fprintf(stderr, "my-grep: cannot open file\n");
             exit(1);
         }
-        readFile(fp, &lines, &linesCount);
+        readFile(fp, argv[1]);
     }
 
 
