@@ -7,9 +7,7 @@ void readFile(FILE *file, char *searchTerm)    {
     char *line = NULL;
     size_t len = 0;
     char *result = NULL;
-    // char *searchTerm = "foo";
 
-    // loop for read lines from input file
     while (getline(&line, &len, file) != -1) {
         result = strstr(line, searchTerm);
         if (result != NULL) {
@@ -28,34 +26,30 @@ void readFile(FILE *file, char *searchTerm)    {
             fprintf(stdout, "%s", line);
         }
     }
-
     free(line);
     return;
 }
 
 int main(int argc, char* argv[]) {
     FILE *fp;
-    // char **lines = NULL;
-    // size_t linesCount = 0;
-
     if (argc == 1)    {
         fprintf(stderr, "my-grep: searchterm [file ...]\n");
         exit(1);
     };
+
     if (argc == 2) {
         readFile(stdin, argv[1]);
         exit(0);
     };
 
     for (int i = 2; i < argc; i++)    {
-        
-        // fprintf(stdout, "%s\n", argv[i]);
         fp = fopen(argv[i], "r");
         if (fp == NULL)   {
             fprintf(stderr, "my-grep: cannot open file\n");
             exit(1);
         }
         readFile(fp, argv[1]);
+        fclose(fp);
     }
 
 
